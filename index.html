@@ -127,6 +127,52 @@
             max-height: 90vh;
             height: auto;
         }
+
+        /* Collapsible menu styles */
+        .menu {
+            background-color: #333;
+            padding: 10px;
+            width: 250px;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            bottom: 0;
+            color: white;
+            overflow: auto;
+            transition: all 0.3s ease;
+        }
+
+        .menu button {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .menu button:hover {
+            background-color: #555;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .menu button.active + .submenu {
+            display: block;
+        }
+
+        /* For collapsible menu button icons */
+        .submenu button {
+            padding: 5px 15px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +180,53 @@
         <h1>Waifu Pics Viewer</h1>
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
+
+    <!-- Menu with collapsible categories -->
+    <div class="menu" id="menu">
+        <button id="sfwMenuButton">SFW Categories</button>
+        <div class="submenu" id="sfwMenu">
+            <button class="sfwCategory">waifu</button>
+            <button class="sfwCategory">neko</button>
+            <button class="sfwCategory">shinobu</button>
+            <button class="sfwCategory">megumin</button>
+            <button class="sfwCategory">bully</button>
+            <button class="sfwCategory">cuddle</button>
+            <button class="sfwCategory">cry</button>
+            <button class="sfwCategory">hug</button>
+            <button class="sfwCategory">awoo</button>
+            <button class="sfwCategory">kiss</button>
+            <button class="sfwCategory">lick</button>
+            <button class="sfwCategory">pat</button>
+            <button class="sfwCategory">smug</button>
+            <button class="sfwCategory">bonk</button>
+            <button class="sfwCategory">yeet</button>
+            <button class="sfwCategory">blush</button>
+            <button class="sfwCategory">smile</button>
+            <button class="sfwCategory">wave</button>
+            <button class="sfwCategory">highfive</button>
+            <button class="sfwCategory">handhold</button>
+            <button class="sfwCategory">nom</button>
+            <button class="sfwCategory">bite</button>
+            <button class="sfwCategory">glomp</button>
+            <button class="sfwCategory">slap</button>
+            <button class="sfwCategory">kill</button>
+            <button class="sfwCategory">kick</button>
+            <button class="sfwCategory">happy</button>
+            <button class="sfwCategory">wink</button>
+            <button class="sfwCategory">poke</button>
+            <button class="sfwCategory">dance</button>
+            <button class="sfwCategory">cringe</button>
+        </div>
+
+        <button id="nsfwMenuButton">NSFW Categories</button>
+        <div class="submenu" id="nsfwMenu">
+            <button class="nsfwCategory">waifu</button>
+            <button class="nsfwCategory">neko</button>
+            <button class="nsfwCategory">trap</button>
+            <button class="nsfwCategory">blowjob</button>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Get Images Button -->
         <button id="fetchImage">Get 20 Waifu Images</button>
@@ -149,7 +242,7 @@
     <div id="popup" class="popup">
         <img id="popupImage" src="" alt="Popup Image">
     </div>
-    
+
     <footer>
         <p>&copy; 2024 Waifu Pics Viewer</p>
     </footer>
@@ -161,71 +254,92 @@
         const body = document.body;
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
+        const sfwMenuButton = document.getElementById("sfwMenuButton");
+        const nsfwMenuButton = document.getElementById("nsfwMenuButton");
+        const sfwMenu = document.getElementById("sfwMenu");
+        const nsfwMenu = document.getElementById("nsfwMenu");
+        const sfwCategories = document.querySelectorAll(".sfwCategory");
+        const nsfwCategories = document.querySelectorAll(".nsfwCategory");
+        let currentCategory = "waifu"; // Default category
 
-        // Fetch images from the API
-        function fetchImages() {
-            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
+        // Toggle menu visibility
+        sfwMenuButton.addEventListener("click", () => {
+            sfwMenu.classList.toggle("active");
+        });
+
+        nsfwMenuButton.addEventListener("click", () => {
+            nsfwMenu.classList.toggle("active");
+        });
+
+        // Fetch images from the API based on selected category
+        function fetchImages(category, type = 'nsfw') {
+            fetch(`https://api.waifu.pics/many/${type}/${category}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({
                     exclude: []
-                })
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
             .then(response => response.json())
             .then(data => {
-                if (data.files) {
-                    displayImages(data.files);
-                    showMoreButton.style.display = "block";
-                } else {
-                    alert("No images found.");
-                }
+                const images = data.files;
+                imageContainer.innerHTML = ''; // Clear previous images
+                images.forEach((imageUrl) => {
+                    const imgElement = document.createElement("img");
+                    imgElement.src = imageUrl;
+                    imgElement.alt = "Waifu Image";
+                    imgElement.onclick = () => togglePopup(imgElement.src);
+                    imageContainer.appendChild(imgElement);
+                });
+                showMoreButton.style.display = 'block'; // Show "Show More" button
             })
             .catch(error => {
-                console.error("Error fetching Waifu images:", error);
+                console.error("Error fetching images:", error);
                 alert("Failed to fetch images. Please try again later.");
             });
         }
 
-        // Display images on the page
-        function displayImages(images) {
-            images.forEach(imageUrl => {
-                const img = document.createElement("img");
-                img.src = imageUrl;
-                img.alt = "Waifu Image";
-                img.onclick = () => openPopup(img.src);
-                imageContainer.appendChild(img);
-            });
+        // Show or hide the popup when clicking an image
+        function togglePopup(src) {
+            if (popup.style.display === 'none' || !popup.style.display) {
+                popupImage.src = src;
+                popup.style.display = 'flex'; // Show the popup
+            } else {
+                popup.style.display = 'none'; // Hide the popup
+            }
         }
 
-        // Toggle between dark and light mode
-        document.getElementById("toggleTheme").addEventListener("click", () => {
+        // Show more images
+        showMoreButton.addEventListener("click", () => {
+            fetchImages(currentCategory, currentCategory.startsWith('sfw') ? 'sfw' : 'nsfw');
+        });
+
+        // Change category for SFW and NSFW categories
+        sfwCategories.forEach((categoryButton) => {
+            categoryButton.addEventListener("click", () => {
+                currentCategory = categoryButton.textContent;
+                fetchImages(currentCategory, 'sfw');
+            });
+        });
+
+        nsfwCategories.forEach((categoryButton) => {
+            categoryButton.addEventListener("click", () => {
+                currentCategory = categoryButton.textContent;
+                fetchImages(currentCategory, 'nsfw');
+            });
+        });
+
+        // Initial fetch for default category (waifu, nsfw)
+        fetchImages(currentCategory, 'nsfw');
+
+        // Toggle between light and dark mode
+        const toggleThemeButton = document.getElementById("toggleTheme");
+        toggleThemeButton.addEventListener("click", () => {
             body.classList.toggle("light-mode");
             const isLightMode = body.classList.contains("light-mode");
-            document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
-        });
-
-        // Show the popup
-        function openPopup(imageUrl) {
-            popup.style.display = "flex";
-            popupImage.src = imageUrl;
-        }
-
-        // Close the popup
-        popup.addEventListener("click", () => {
-            popup.style.display = "none";
-        });
-
-        // Handle "Show More" button click
-        showMoreButton.addEventListener("click", () => {
-            fetchImages();
-        });
-
-        // Fetch initial images
-        fetchButton.addEventListener("click", () => {
-            imageContainer.innerHTML = ""; // Clear any previous images
-            fetchImages();
+            toggleThemeButton.textContent = isLightMode ? "🌙" : "☀️";
         });
     </script>
 </body>
