@@ -1,346 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#72a9e8">
-    <meta property="og:title" content="Waifu.pics">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://waifu.pics">
-    <meta property="og:description" content="A very large user-controlled image database">
-    <meta property="og:image" content="https://waifu.pics/favicon.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="keywords" content="nekos, catgirl, nsfw, sfw, nyaa, images, lewd, neko images, meow, anime, manga, trap, anime, waifu, pics, discord, api">
-    <link rel="icon" href="/favicon.ico">
-    <title>waifu.pics</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
-    <link href="/css/app.f1684b3e.css" rel="preload" as="style">
-    <link href="/css/chunk-vendors.40adde20.css" rel="preload" as="style">
-    <link href="/js/app.7244d012.js" rel="preload" as="script">
-    <link href="/js/chunk-vendors.0e3a34d9.js" rel="preload" as="script">
-    <link href="/css/chunk-vendors.40adde20.css" rel="stylesheet">
-    <link href="/css/app.f1684b3e.css" rel="stylesheet">
-    <style type="text/css">
-        .notificationCenter {
-            font-family: Avenir, Helvetica, Arial, sans-serif;
-            position: fixed;
-            width: 300px;
-            max-width: 90vw;
-            top: 0;
-            right: 0;
-            z-index: 50;
-            margin: 0 8px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waifu Pics Viewer</title>
+    <style>
+        :root {
+            --bg-color-dark: #121212;
+            --text-color-dark: #ffffff;
+            --button-bg-dark: #333333;
+            --bg-color-light: #f4f4f9;
+            --text-color-light: #333333;
+            --button-bg-light: #6c63ff;
         }
-        
-        .notificationCenter.topLeft {
-            top: 0;
-            left: 0;
-            bottom: auto;
-            right: auto;
-        }
-        
-        .notificationCenter.topRight {
-            top: 0;
-            right: 0;
-            bottom: auto;
-            left: auto;
-        }
-        
-        .notificationCenter.bottomLeft {
-            bottom: 0;
-            left: 0;
-            top: auto;
-            right: auto;
-        }
-        
-        .notificationCenter.bottomRight {
-            bottom: 0;
-            right: 0;
-            top: auto;
-            left: auto;
-        }
-        
-        .notificationCenter.topCenter {
-            top: 0;
-            bottom: auto;
-        }
-        
-        .notificationCenter.bottomCenter,
-        .notificationCenter.topCenter {
-            left: 50%;
-            right: auto;
-            -webkit-transform: translate3d(-50%, 0, 0);
-            transform: translate3d(-50%, 0, 0);
-            margin: auto;
-        }
-        
-        .notificationCenter.bottomCenter {
-            bottom: 0;
-            top: auto;
-        }
-        
-        .notificationCenter .vn-notification {
-            -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, .5);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, .5);
-            overflow: hidden;
-            margin: 8px auto;
-            border-radius: 5px;
-        }
-        
-        .notificationCenter .vn-notification .vn-container {
-            position: relative;
-            padding: 16px 24px 16px 16px;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-        }
-        
-        .notificationCenter .vn-notification .vn-container .vn-title {
-            font-size: 17px;
-            -webkit-transform: translateY(-5px);
-            transform: translateY(-5px);
-            font-weight: 500;
-        }
-        
-        .notificationCenter .vn-notification .vn-container p {
+
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
-            font-size: 14px;
+            padding: 0;
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+            transition: all 0.3s ease;
         }
-        
-        .notificationCenter .vn-notification .vn-container .vn-icn-left {
-            margin-right: 16px;
+
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
         }
-        
-        .notificationCenter .vn-notification .vn-container .vn-closeButton {
+
+        .container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        button {
+            background-color: var(--button-bg-dark);
+            color: var(--text-color-dark);
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #555555;
+        }
+
+        .toggle-theme {
             position: absolute;
+            top: 10px;
             right: 10px;
-            top: 8px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
         }
-    </style>
-    <style type="text/css" id="vuetify-theme-stylesheet">
-        .v-application a {
-            color: #2196f3;
+
+        /* Grid layout for images */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* 8 images per row */
+            gap: 10px;
+            margin-top: 20px;
         }
-        
-        .v-application .primary {
-            background-color: #2196f3 !important;
-            border-color: #2196f3 !important;
+
+        img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #333333;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
         }
-        
-        .v-application .primary--text {
-            color: #2196f3 !important;
-            caret-color: #2196f3 !important;
+
+        footer {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
         }
-        
-        .v-application .primary.lighten-5 {
-            background-color: #d4ffff !important;
-            border-color: #d4ffff !important;
+
+        /* Light mode styles */
+        .light-mode {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
         }
-        
-        .v-application .primary--text.text--lighten-5 {
-            color: #d4ffff !important;
-            caret-color: #d4ffff !important;
+
+        .light-mode button {
+            background-color: var(--button-bg-light);
+            color: var(--text-color-light);
         }
-        
-        .v-application .primary.lighten-4 {
-            background-color: #b5ffff !important;
-            border-color: #b5ffff !important;
+
+        .light-mode img {
+            border-color: #dddddd;
         }
-        
-        .v-application .primary--text.text--lighten-4 {
-            color: #b5ffff !important;
-            caret-color: #b5ffff !important;
+
+        .light-mode .toggle-theme {
+            color: #333333;
         }
-        
-        .v-application .primary.lighten-3 {
-            background-color: #95e8ff !important;
-            border-color: #95e8ff !important;
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        
-        .v-application .primary--text.text--lighten-3 {
-            color: #95e8ff !important;
-            caret-color: #95e8ff !important;
-        }
-        
-        .v-application .primary.lighten-2 {
-            background-color: #75ccff !important;
-            border-color: #75ccff !important;
-        }
-        
-        .v-application .primary--text.text--lighten-2 {
-            color: #75ccff !important;
-            caret-color: #75ccff !important;
-        }
-        
-        .v-application .primary.lighten-1 {
-            background-color: #51b0ff !important;
-            border-color: #51b0ff !important;
-        }
-        
-        .v-application .primary--text.text--lighten-1 {
-            color: #51b0ff !important;
-            caret-color: #51b0ff !important;
-        }
-        
-        .v-application .primary.darken-1 {
-            background-color: #007cd6 !important;
-            border-color: #007cd6 !important;
-        }
-        
-        .v-application .primary--text.text--darken-1 {
-            color: #007cd6 !important;
-            caret-color: #007cd6 !important;
-        }
-        
-        .v-application .primary.darken-2 {
-            background-color: #0064ba !important;
-            border-color: #0064ba !important;
-        }
-        
-        .v-application .primary--text.text--darken-2 {
-            color: #0064ba !important;
-            caret-color: #0064ba !important;
-        }
-        
-        .v-application .primary.darken-3 {
-            background-color: #004d9f !important;
-            border-color: #004d9f !important;
-        }
-        
-        .v-application .primary--text.text--darken-3 {
-            color: #004d9f !important;
-            caret-color: #004d9f !important;
-        }
-        
-        .v-application .primary.darken-4 {
-            background-color: #003784 !important;
-            border-color: #003784 !important;
-        }
-        
-        .v-application .primary--text.text--darken-4 {
-            color: #003784 !important;
-            caret-color: #003784 !important;
+
+        .popup img {
+            max-width: 90%;
+            max-height: 90vh;
+            height: auto;
         }
     </style>
 </head>
-
-<body data-new-gr-c-s-check-loaded="14.1207.0" data-gr-ext-installed="">
-  <noscript>
-    <strong>We're sorry but waifu.pics doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-  </noscript>
-  <div data-app="true" class="v-application v-application--is-ltr theme--dark" id="app">
-    <div class="v-overlay v-overlay--active theme--dark" style="z-index: 6;">
-      <div class="v-overlay__scrim" style="opacity: 0.46; background-color: rgb(33, 33, 33); border-color: rgb(33, 33, 33);"></div>
-      <div class="v-overlay__content"></div>
+<body>
+    <header>
+        <h1>Waifu Pics Viewer</h1>
+        <button class="toggle-theme" id="toggleTheme">☀️</button>
+    </header>
+    <div class="container">
+        <!-- Get Images Button -->
+        <button id="fetchImage">Get 20 Waifu Images</button>
+        
+        <!-- Container to display images -->
+        <div id="imageContainer" class="image-container"></div>
+        
+        <!-- Show More Button -->
+        <button id="showMore" style="display:none;">Show More</button>
     </div>
-    <div class="v-application--wrap">
-      <div>
-        <nav class="v-navigation-drawer v-navigation-drawer--clipped v-navigation-drawer--fixed v-navigation-drawer--is-mobile v-navigation-drawer--open theme--dark" data-booted="true" style="height: 100vh; top: 0px; transform: translateX(0%); width: 256px;">
-          <div class="v-navigation-drawer__content">
-            <div class="v-list v-sheet theme--dark v-list--dense v-list--nav">
-              <a href="/" class="v-list-item--active v-list-item v-list-item--link theme--dark" tabindex="0" aria-current="page">
-                <div class="v-list-item__action">
-                  <i aria-hidden="true" class="v-icon notranslate mdi mdi-home theme--dark"></i>
-                </div>
-                <div class="v-list-item__content">
-                  <div class="v-list-item__title">Home</div>
-                </div>
-              </a>
-            </div>
-            <div class="v-list v-sheet theme--dark v-list--dense v-list--nav">
-              <a href="/nsfw/waifu" class="v-list-item v-list-item--link theme--dark" tabindex="0">
-                <div class="v-list-item__action">
-                  <i aria-hidden="true" class="v-icon notranslate mdi mdi-domino-mask theme--dark"></i>
-                </div>
-                <div class="v-list-item__content">
-                  <div class="v-list-item__title">NSFW</div>
-                </div>
-              </a>
-            </div>
-            <div class="v-list v-sheet theme--dark v-list--dense v-list--nav">
-              <a href="/more" class="v-list-item v-list-item--link theme--dark" tabindex="0">
-                <div class="v-list-item__action">
-                  <i aria-hidden="true" class="v-icon notranslate mdi mdi-dots-horizontal theme--dark"></i>
-                </div>
-                <div class="v-list-item__content">
-                  <div class="v-list-item__title">More</div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </nav>
-        <header class="v-sheet theme--dark v-toolbar v-app-bar v-app-bar--clipped v-app-bar--fixed" data-booted="true" style="height: 64px; margin-top: 0px; transform: translateY(0px); left: 0px; right: 0px;">
-          <div class="v-toolbar__content" style="height: 64px;">
-            <button type="button" class="v-app-bar__nav-icon v-btn v-btn--icon v-btn--round theme--dark v-size--default">
-              <span class="v-btn__content">
-                <i aria-hidden="true" class="v-icon notranslate mdi mdi-menu theme--dark"></i>
-              </span>
-            </button>
-            <div class="v-toolbar__title">WAIFU.PICS</div>
-          </div>
-        </header>
-      </div>
-      <main class="v-main" style="padding: 64px 0px 0px;" data-booted="true">
-        <div class="v-main__wrap">
-          <div data-v-0615afbe="">
-            <button data-v-0615afbe="" type="button" class="v-btn v-btn--bottom v-btn--is-elevated v-btn--fab v-btn--fixed v-btn--has-bg v-btn--right v-btn--round theme--dark v-size--large">
-              <span class="v-btn__content">
-                <i data-v-0615afbe="" aria-hidden="true" class="v-icon notranslate mdi mdi-refresh theme--dark"></i>
-              </span>
-            </button>
-            <div data-v-0615afbe="" id="photos">
-              <!-- Image placeholders will be dynamically updated here -->
-              <div class="photo-item">
-                <img src="PLACEHOLDER_IMAGE_URL" alt="Image 1">
-              </div>
-              <div class="photo-item">
-                <img src="PLACEHOLDER_IMAGE_URL" alt="Image 2">
-              </div>
-              <div class="photo-item">
-                <img src="PLACEHOLDER_IMAGE_URL" alt="Image 3">
-              </div>
-              <div class="photo-item">
-                <img src="PLACEHOLDER_IMAGE_URL" alt="Image 4">
-              </div>
-              <!-- More placeholder image items -->
-            </div>
-          </div>
-        </div>
-      </main>
+    
+    <!-- Popup for showing large image -->
+    <div id="popup" class="popup">
+        <img id="popupImage" src="" alt="Popup Image">
     </div>
-  </div>
+    
+    <footer>
+        <p>&copy; 2024 Waifu Pics Viewer</p>
+    </footer>
 
-  <script>
-    // Fetch image data from your API
-    fetch('https://your-api-endpoint.com/get-images') // Replace with your actual API endpoint
-      .then(response => response.json())
-      .then(data => {
-        // Assuming the API returns an array of image URLs
-        const imageUrls = data.imageUrls;
+    <script>
+        const fetchButton = document.getElementById("fetchImage");
+        const showMoreButton = document.getElementById("showMore");
+        const imageContainer = document.getElementById("imageContainer");
+        const body = document.body;
+        const popup = document.getElementById("popup");
+        const popupImage = document.getElementById("popupImage");
 
-        // Find all image elements in the #photos section
-        const photoItems = document.querySelectorAll('#photos .photo-item img');
+        // Fetch images from the API
+        function fetchImages() {
+            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    exclude: []
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.files) {
+                    displayImages(data.files);
+                    showMoreButton.style.display = "block";
+                } else {
+                    alert("No images found.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching Waifu images:", error);
+                alert("Failed to fetch images. Please try again later.");
+            });
+        }
 
-        // Loop through each image element and set the src to the corresponding URL
-        photoItems.forEach((img, index) => {
-          if (imageUrls[index]) {
-            img.src = imageUrls[index]; // Replace placeholder with actual URL
-          }
+        // Display images on the page
+        function displayImages(images) {
+            images.forEach(imageUrl => {
+                const img = document.createElement("img");
+                img.src = imageUrl;
+                img.alt = "Waifu Image";
+                img.onclick = () => openPopup(img.src);
+                imageContainer.appendChild(img);
+            });
+        }
+
+        // Toggle between dark and light mode
+        document.getElementById("toggleTheme").addEventListener("click", () => {
+            body.classList.toggle("light-mode");
+            const isLightMode = body.classList.contains("light-mode");
+            document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
         });
-      })
-      .catch(error => {
-        console.error('Error fetching images:', error);
-      });
-  </script>
 
-  <script src="/js/chunk-vendors.0e3a34d9.js"></script>
-  <script src="/js/app.7244d012.js"></script>
-  <!-- Cloudflare Pages Analytics -->
-  <script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;e39f5f45e6d64784bef4867c1e804fb7&quot;}"></script>
+        // Show the popup
+        function openPopup(imageUrl) {
+            popup.style.display = "flex";
+            popupImage.src = imageUrl;
+        }
+
+        // Close the popup
+        popup.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+
+        // Handle "Show More" button click
+        showMoreButton.addEventListener("click", () => {
+            fetchImages();
+        });
+
+        // Fetch initial images
+        fetchButton.addEventListener("click", () => {
+            imageContainer.innerHTML = ""; // Clear any previous images
+            fetchImages();
+        });
+    </script>
 </body>
 </html>
