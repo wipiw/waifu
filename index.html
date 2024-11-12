@@ -62,10 +62,17 @@
             color: white;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
+        /* Grid layout for images */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* 8 images per row */
+            gap: 10px;
             margin-top: 20px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
             border: 2px solid #333333;
             border-radius: 10px;
             cursor: pointer;
@@ -127,26 +134,11 @@
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
     <div class="container">
-        <!-- Dropdown for selecting image category -->
-        <select id="categorySelect">
-            <option value="waifu">Waifu</option>
-            <option value="neko">Neko</option>
-            <option value="shinobu">Shinobu</option>
-            <option value="megumin">Megumin</option>
-            <option value="bully">Bully</option>
-            <!-- Add other categories as needed -->
-        </select>
-        
-        <!-- Dropdown for selecting image type (SFW or NSFW) -->
-        <select id="typeSelect">
-            <option value="sfw">SFW</option>
-            <option value="nsfw">NSFW</option>
-        </select>
-
+        <!-- Get Images Button -->
         <button id="fetchImage">Get 100 Waifu Images</button>
         
         <!-- Container to display images -->
-        <div id="imageContainer"></div>
+        <div id="imageContainer" class="image-container"></div>
         
         <!-- Show More Button -->
         <button id="showMore" style="display:none;">Show More</button>
@@ -165,19 +157,13 @@
         const fetchButton = document.getElementById("fetchImage");
         const showMoreButton = document.getElementById("showMore");
         const imageContainer = document.getElementById("imageContainer");
-        const categorySelect = document.getElementById("categorySelect");
-        const typeSelect = document.getElementById("typeSelect");
         const body = document.body;
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
-        let currentPage = 1;
 
         // Fetch images from the API
         function fetchImages() {
-            const category = categorySelect.value;
-            const type = typeSelect.value;
-
-            fetch(`https://api.waifu.pics/many/${type}/${category}`, {
+            fetch(`https://api.waifu.pics/many/sfw/waifu`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -232,7 +218,6 @@
 
         // Handle "Show More" button click
         showMoreButton.addEventListener("click", () => {
-            currentPage++;
             fetchImages();
         });
 
