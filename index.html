@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waifu Pics Viewer</title>
+    <title>Waifu Pics</title>
+
+    <!-- Favicon Link -->
+    <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg" sizes="100x100">
+
     <style>
         :root {
             --bg-color-dark: #121212;
@@ -164,7 +168,7 @@
 
         // Fetch images from the API
         function fetchImages() {
-            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
+            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
