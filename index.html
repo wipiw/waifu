@@ -5,227 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waifu Pics Viewer</title>
     <style>
-        :root {
-            --bg-color-dark: #121212;
-            --text-color-dark: #ffffff;
-            --button-bg-dark: #333333;
-            --bg-color-light: #f4f4f9;
-            --text-color-light: #333333;
-            --button-bg-light: #6c63ff;
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color-dark);
-            color: var(--text-color-dark);
-            transition: all 0.3s ease;
+            background-color: #f4f4f9;
+            color: #333;
         }
-
         header {
             background-color: #6c63ff;
             color: white;
             padding: 20px;
             text-align: center;
-            position: relative;
         }
-
-        .container {
+        .menu {
+            padding: 10px;
             text-align: center;
-            margin: 20px;
         }
-
-        button {
-            background-color: var(--button-bg-dark);
-            color: var(--text-color-dark);
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #555555;
-        }
-
-        .toggle-theme {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            color: white;
-        }
-
-        /* Grid layout for images */
-        .image-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 8 images per row */
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        img {
-            width: 100%;
-            height: auto;
-            border: 2px solid #333333;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        footer {
+        .menu button {
             background-color: #6c63ff;
             color: white;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .menu button:hover {
+            background-color: #4a42b7;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px;
+        }
+        .container img {
             width: 100%;
-            bottom: 0;
-        }
-
-        /* Light mode styles */
-        .light-mode {
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode button {
-            background-color: var(--button-bg-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode img {
-            border-color: #dddddd;
-        }
-
-        .light-mode .toggle-theme {
-            color: #333333;
-        }
-
-        /* Popup styles */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .popup img {
-            max-width: 90%;
-            max-height: 90vh;
             height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Waifu Pics Viewer</h1>
-        <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
-    <div class="container">
-        <!-- Get Images Button -->
-        <button id="fetchImage">Get 20 Waifu Images</button>
-        
-        <!-- Container to display images -->
-        <div id="imageContainer" class="image-container"></div>
-        
-        <!-- Show More Button -->
-        <button id="showMore" style="display:none;">Show More</button>
+    <div class="menu">
+        <button id="sfwButton">Get 20 Waifu Images</button>
+        <button id="gifButton">Get 20 Waifu GIFs</button>
     </div>
-    
-    <!-- Popup for showing large image -->
-    <div id="popup" class="popup">
-        <img id="popupImage" src="" alt="Popup Image">
+    <div class="container" id="imageContainer">
+        <!-- Images will be appended here -->
     </div>
-    
-    <footer>
-        <p>&copy; 2024 Waifu Pics Viewer</p>
-    </footer>
-
     <script>
-        const fetchButton = document.getElementById("fetchImage");
-        const showMoreButton = document.getElementById("showMore");
         const imageContainer = document.getElementById("imageContainer");
-        const body = document.body;
-        const popup = document.getElementById("popup");
-        const popupImage = document.getElementById("popupImage");
+        const sfwButton = document.getElementById("sfwButton");
+        const gifButton = document.getElementById("gifButton");
 
-        // Fetch images from the API
-        function fetchImages() {
-            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    exclude: []
+        function fetchImages(category, type = "sfw") {
+            fetch(`https://api.waifu.pics/many/${type}/${category}`, {
+                method: "POST",
+                body: JSON.stringify({ exclude: [] }),
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    imageContainer.innerHTML = ""; // Clear previous images
+                    data.files.slice(0, 20).forEach(url => {
+                        const img = document.createElement("img");
+                        img.src = url;
+                        img.alt = "Waifu Image";
+                        imageContainer.appendChild(img);
+                    });
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.files) {
-                    displayImages(data.files);
-                    showMoreButton.style.display = "block";
-                } else {
-                    alert("No images found.");
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching Waifu images:", error);
-                alert("Failed to fetch images. Please try again later.");
-            });
+                .catch(error => console.error("Error fetching images:", error));
         }
 
-        // Display images on the page
-        function displayImages(images) {
-            images.forEach(imageUrl => {
-                const img = document.createElement("img");
-                img.src = imageUrl;
-                img.alt = "Waifu Image";
-                img.onclick = () => openPopup(img.src);
-                imageContainer.appendChild(img);
-            });
-        }
-
-        // Toggle between dark and light mode
-        document.getElementById("toggleTheme").addEventListener("click", () => {
-            body.classList.toggle("light-mode");
-            const isLightMode = body.classList.contains("light-mode");
-            document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
+        sfwButton.addEventListener("click", () => {
+            fetchImages("waifu", "sfw");
         });
 
-        // Show the popup
-        function openPopup(imageUrl) {
-            popup.style.display = "flex";
-            popupImage.src = imageUrl;
-        }
-
-        // Close the popup
-        popup.addEventListener("click", () => {
-            popup.style.display = "none";
-        });
-
-        // Handle "Show More" button click
-        showMoreButton.addEventListener("click", () => {
-            fetchImages();
-        });
-
-        // Fetch initial images
-        fetchButton.addEventListener("click", () => {
-            imageContainer.innerHTML = ""; // Clear any previous images
-            fetchImages();
+        gifButton.addEventListener("click", () => {
+            fetchImages("waifu", "sfw/gif");
         });
     </script>
 </body>
