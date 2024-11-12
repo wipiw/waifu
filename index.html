@@ -65,7 +65,7 @@
         /* Grid layout for images */
         .image-container {
             display: grid;
-            grid-template-columns: repeat(8, 1fr); /* 8 images per row */
+            grid-template-columns: repeat(3, 1fr); /* 3 images per row */
             gap: 10px;
             margin-top: 20px;
         }
@@ -136,7 +136,7 @@
     </header>
     <div class="container">
         <!-- Get Images Button -->
-        <button id="fetchImage">Get 20 Waifu Images</button>
+        <button id="fetchImage">Get 40 Waifu Images</button>
         
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
@@ -176,7 +176,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.files) {
-                    displayImages(data.files);
+                    displayImages(data.files.slice(0, 40));  // Show only 40 images
                     showMoreButton.style.display = "block";
                 } else {
                     alert("No images found.");
