@@ -106,6 +106,22 @@
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
     <div class="container">
+        <!-- Dropdown for selecting image category -->
+        <select id="categorySelect">
+            <option value="waifu">Waifu</option>
+            <option value="neko">Neko</option>
+            <option value="shinobu">Shinobu</option>
+            <option value="megumin">Megumin</option>
+            <option value="bully">Bully</option>
+            <!-- Add other categories as needed -->
+        </select>
+        
+        <!-- Dropdown for selecting image type (SFW or NSFW) -->
+        <select id="typeSelect">
+            <option value="sfw">SFW</option>
+            <option value="nsfw">NSFW</option>
+        </select>
+
         <button id="fetchImage">Get a Waifu Image</button>
         <div>
             <img id="waifuImage" src="" alt="Waifu Image" style="display:none;">
@@ -120,13 +136,24 @@
         const toggleThemeButton = document.getElementById("toggleTheme");
         const body = document.body;
 
-        // Fetch Waifu image
+        // Get category and type values
+        const categorySelect = document.getElementById("categorySelect");
+        const typeSelect = document.getElementById("typeSelect");
+
+        // Fetch Waifu image based on selected category and type
         fetchButton.addEventListener("click", () => {
-            fetch("https://api.waifu.pics/sfw/waifu")
+            const category = categorySelect.value;
+            const type = typeSelect.value;
+
+            fetch(`https://api.waifu.pics/${type}/${category}`)
                 .then(response => response.json())
                 .then(data => {
-                    waifuImage.src = data.url;
-                    waifuImage.style.display = "block";
+                    if (data.url) {
+                        waifuImage.src = data.url;
+                        waifuImage.style.display = "block";
+                    } else {
+                        alert("Failed to fetch image. Please try again later.");
+                    }
                 })
                 .catch(error => {
                     console.error("Error fetching Waifu image:", error);
