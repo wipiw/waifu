@@ -63,11 +63,13 @@
         }
 
         img {
-            max-width: 80%;
+            max-width: 100%;
             height: auto;
             margin-top: 20px;
             border: 2px solid #333333;
             border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
         }
 
         footer {
@@ -98,6 +100,25 @@
         .light-mode .toggle-theme {
             color: #333333;
         }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup img {
+            max-width: 80%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -122,50 +143,103 @@
             <option value="nsfw">NSFW</option>
         </select>
 
-        <button id="fetchImage">Get a Waifu Image</button>
-        <div>
-            <img id="waifuImage" src="" alt="Waifu Image" style="display:none;">
-        </div>
+        <button id="fetchImage">Get 100 Waifu Images</button>
+        
+        <!-- Container to display images -->
+        <div id="imageContainer"></div>
+        
+        <!-- Show More Button -->
+        <button id="showMore" style="display:none;">Show More</button>
     </div>
+    
+    <!-- Popup for showing large image -->
+    <div id="popup" class="popup">
+        <img id="popupImage" src="" alt="Popup Image">
+    </div>
+    
     <footer>
         <p>&copy; 2024 Waifu Pics Viewer</p>
     </footer>
+
     <script>
         const fetchButton = document.getElementById("fetchImage");
-        const waifuImage = document.getElementById("waifuImage");
-        const toggleThemeButton = document.getElementById("toggleTheme");
-        const body = document.body;
-
-        // Get category and type values
+        const showMoreButton = document.getElementById("showMore");
+        const imageContainer = document.getElementById("imageContainer");
         const categorySelect = document.getElementById("categorySelect");
         const typeSelect = document.getElementById("typeSelect");
+        const body = document.body;
+        const popup = document.getElementById("popup");
+        const popupImage = document.getElementById("popupImage");
+        let currentPage = 1;
 
-        // Fetch Waifu image based on selected category and type
-        fetchButton.addEventListener("click", () => {
+        // Fetch images from the API
+        function fetchImages() {
             const category = categorySelect.value;
             const type = typeSelect.value;
 
-            fetch(`https://api.waifu.pics/${type}/${category}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.url) {
-                        waifuImage.src = data.url;
-                        waifuImage.style.display = "block";
-                    } else {
-                        alert("Failed to fetch image. Please try again later.");
-                    }
+            fetch(`https://api.waifu.pics/many/${type}/${category}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    exclude: []
                 })
-                .catch(error => {
-                    console.error("Error fetching Waifu image:", error);
-                    alert("Failed to fetch image. Please try again later.");
-                });
-        });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.files) {
+                    displayImages(data.files);
+                    showMoreButton.style.display = "block";
+                } else {
+                    alert("No images found.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching Waifu images:", error);
+                alert("Failed to fetch images. Please try again later.");
+            });
+        }
+
+        // Display images on the page
+        function displayImages(images) {
+            images.forEach(imageUrl => {
+                const img = document.createElement("img");
+                img.src = imageUrl;
+                img.alt = "Waifu Image";
+                img.onclick = () => openPopup(img.src);
+                imageContainer.appendChild(img);
+            });
+        }
 
         // Toggle between dark and light mode
-        toggleThemeButton.addEventListener("click", () => {
+        document.getElementById("toggleTheme").addEventListener("click", () => {
             body.classList.toggle("light-mode");
             const isLightMode = body.classList.contains("light-mode");
-            toggleThemeButton.textContent = isLightMode ? "🌙" : "☀️";
+            document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
+        });
+
+        // Show the popup
+        function openPopup(imageUrl) {
+            popup.style.display = "flex";
+            popupImage.src = imageUrl;
+        }
+
+        // Close the popup
+        popup.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+
+        // Handle "Show More" button click
+        showMoreButton.addEventListener("click", () => {
+            currentPage++;
+            fetchImages();
+        });
+
+        // Fetch initial images
+        fetchButton.addEventListener("click", () => {
+            imageContainer.innerHTML = ""; // Clear any previous images
+            fetchImages();
         });
     </script>
 </body>
