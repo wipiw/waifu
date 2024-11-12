@@ -81,13 +81,45 @@
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Your content goes here -->
-        <h1>Welcome to Waifu.pics</h1>
-        <p>Your favorite image database.</p>
+    <header>
+        <h1>Waifu Pics Viewer</h1>
+        <button class="toggle-theme" id="toggleTheme">☀️</button>
+    </header>
+    <div class="container">
+        <button id="fetchImage">Get a Waifu Image</button>
+        <div>
+            <img id="waifuImage" src="" alt="Waifu Image" style="display:none;">
+        </div>
     </div>
+    <footer>
+        <p>&copy; 2024 Waifu Pics Viewer</p>
+    </footer>
+    <script>
+        const fetchButton = document.getElementById("fetchImage");
+        const waifuImage = document.getElementById("waifuImage");
+        const toggleThemeButton = document.getElementById("toggleTheme");
+        const body = document.body;
 
-    <script src="/js/chunk-vendors.0e3a34d9.js"></script>
-    <script src="/js/app.7244d012.js"></script>
+        // Fetch Waifu image
+        fetchButton.addEventListener("click", () => {
+            fetch("https://api.waifu.pics/sfw/waifu")
+                .then(response => response.json())
+                .then(data => {
+                    waifuImage.src = data.url;
+                    waifuImage.style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error fetching Waifu image:", error);
+                    alert("Failed to fetch image. Please try again later.");
+                });
+        });
+
+        // Toggle between dark and light mode
+        toggleThemeButton.addEventListener("click", () => {
+            body.classList.toggle("light-mode");
+            const isLightMode = body.classList.contains("light-mode");
+            toggleThemeButton.textContent = isLightMode ? "🌙" : "☀️";
+        });
+    </script>
 </body>
 </html>
