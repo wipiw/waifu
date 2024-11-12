@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waifu Pics Viewer</title>
+    <style>
+        :root {
+            --bg-color-dark: #121212;
+            --text-color-dark: #ffffff;
+            --button-bg-dark: #333333;
+
+            --bg-color-light: #f4f4f9;
+            --text-color-light: #333333;
+            --button-bg-light: #6c63ff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+            transition: all 0.3s ease;
+        }
+
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        button {
+            background-color: var(--button-bg-dark);
+            color: var(--text-color-dark);
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #555555;
+        }
+
+        .toggle-theme {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+        }
+
+        img {
+            max-width: 80%;
+            height: auto;
+            margin-top: 20px;
+            border: 2px solid #333333;
+            border-radius: 10px;
+        }
+
+        footer {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Light mode styles */
+        .light-mode {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+        }
+
+        .light-mode button {
+            background-color: var(--button-bg-light);
+            color: var(--text-color-light);
+        }
+
+        .light-mode img {
+            border-color: #dddddd;
+        }
+
+        .light-mode .toggle-theme {
+            color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Waifu Pics Viewer</h1>
+        <button class="toggle-theme" id="toggleTheme">☀️</button>
+    </header>
+    <div class="container">
+        <button id="fetchImage">Get a Waifu Image</button>
+        <div>
+            <img id="waifuImage" src="" alt="Waifu Image" style="display:none;">
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Waifu Pics Viewer</p>
+    </footer>
+    <script>
+        const fetchButton = document.getElementById("fetchImage");
+        const waifuImage = document.getElementById("waifuImage");
+        const toggleThemeButton = document.getElementById("toggleTheme");
+        const body = document.body;
+
+        // Fetch Waifu image
+        fetchButton.addEventListener("click", () => {
+            fetch("https://api.waifu.pics/sfw/waifu")
+                .then(response => response.json())
+                .then(data => {
+                    waifuImage.src = data.url;
+                    waifuImage.style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error fetching Waifu image:", error);
+                    alert("Failed to fetch image. Please try again later.");
+                });
+        });
+
+        // Toggle between dark and light mode
+        toggleThemeButton.addEventListener("click", () => {
+            body.classList.toggle("light-mode");
+            const isLightMode = body.classList.contains("light-mode");
+            toggleThemeButton.textContent = isLightMode ? "🌙" : "☀️";
+        });
+    </script>
+</body>
+</html>
