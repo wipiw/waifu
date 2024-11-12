@@ -123,7 +123,8 @@
         }
 
         .popup img {
-            max-width: 80%;
+            max-width: 90%;
+            max-height: 90vh;
             height: auto;
         }
     </style>
@@ -135,7 +136,7 @@
     </header>
     <div class="container">
         <!-- Get Images Button -->
-        <button id="fetchImage">Get 100 Waifu Images</button>
+        <button id="fetchImage">Get 20 Waifu Images</button>
         
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
@@ -163,7 +164,7 @@
 
         // Fetch images from the API
         function fetchImages() {
-            fetch(`https://api.waifu.pics/many/sfw/waifu`, {
+            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
