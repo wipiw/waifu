@@ -6,7 +6,140 @@
     <title>Waifu Generator</title>
     <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg">
     <style>
-        /* Include the above CSS here */
+        :root {
+            --bg-color-dark: #121212;
+            --text-color-dark: #ffffff;
+            --button-bg-dark: #333333;
+            --bg-color-light: #f4f4f9;
+            --text-color-light: #333333;
+            --button-bg-light: #6c63ff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            color: var(--text-color-dark);
+            transition: all 0.3s ease;
+        }
+
+        /* Background overlay with 20% opacity */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            opacity: 0.2; /* 20% opacity */
+            z-index: -1; /* Make sure the overlay is behind the content */
+        }
+
+        /* Dark background overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+            z-index: -1;
+        }
+
+        /* Header with logo */
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        /* Logo inside the header */
+        header img {
+            width: 200px;
+            height: auto;
+        }
+
+        /* Link styling for header title */
+        header a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* Container for images */
+        .container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        /* Grid layout for images */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 images per row */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #333333;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        /* Light mode styles */
+        .light-mode {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+        }
+
+        .light-mode button {
+            background-color: var(--button-bg-light);
+            color: var(--text-color-light);
+        }
+
+        .light-mode img {
+            border-color: #dddddd;
+        }
+
+        .light-mode .toggle-theme {
+            color: #333333;
+        }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup img {
+            max-width: 90%;
+            max-height: 90vh;
+            height: auto;
+        }
     </style>
 </head>
 <body>
