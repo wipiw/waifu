@@ -18,11 +18,13 @@
             --button-bg-light: #6c63ff;
         }
 
+        /* Set background image */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color-dark);
+            background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
+            background-size: cover; /* Ensures background image covers the entire page */
             color: var(--text-color-dark);
             transition: all 0.3s ease;
         }
@@ -37,7 +39,7 @@
         }
 
         header {
-            background-color: #6c63ff;
+            background-color: rgba(108, 99, 255, 0.8); /* Semi-transparent header for better visibility */
             color: white;
             padding: 20px;
             text-align: center;
