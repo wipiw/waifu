@@ -13,6 +13,8 @@
             --bg-color-light: #f4f4f9;
             --text-color-light: #333333;
             --button-bg-light: #6c63ff;
+            --milk-color: rgba(255, 255, 255, 0.5); /* White milk effect color */
+            --transition-speed: 0.3s;
         }
 
         body {
@@ -21,7 +23,7 @@
             padding: 0;
             position: relative;
             color: var(--text-color-dark);
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) ease;
         }
 
         /* Background overlay with 20% opacity */
@@ -79,6 +81,16 @@
             margin-left: 10px;
         }
 
+        /* Dark Mode icon with animation */
+        .toggle-theme {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 28px;
+            color: white;
+            transition: color var(--transition-speed);
+        }
+
         /* Container for images */
         .container {
             text-align: center;
@@ -100,6 +112,35 @@
             border-radius: 10px;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Milk splash effect */
+        .milk-splash {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: var(--milk-color);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: splashAnimation 1s ease-out forwards;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes splashAnimation {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
         }
 
         /* Light mode styles */
@@ -209,9 +250,25 @@
                 const img = document.createElement("img");
                 img.src = imageUrl;
                 img.alt = "Waifu Image";
-                img.onclick = () => openPopup(img.src);
+                img.onclick = (event) => createMilkSplash(event, img.src);
                 imageContainer.appendChild(img);
             });
+        }
+
+        // Create the milk splash effect
+        function createMilkSplash(event, imageSrc) {
+            const splash = document.createElement("div");
+            splash.classList.add("milk-splash");
+            splash.style.left = `${event.clientX}px`;
+            splash.style.top = `${event.clientY}px`;
+            document.body.appendChild(splash);
+
+            // Open popup with image
+            openPopup(imageSrc);
+
+            setTimeout(() => {
+                splash.remove();
+            }, 1000); // Remove splash after animation
         }
 
         // Toggle between dark and light mode
