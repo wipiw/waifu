@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waifu Generator</title>
     <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color-dark: #121212;
@@ -15,15 +16,17 @@
             --button-bg-light: #6c63ff;
             --milk-color: rgba(255, 255, 255, 0.5); /* White milk effect color */
             --transition-speed: 0.3s;
+            --font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
             margin: 0;
             padding: 0;
             position: relative;
             color: var(--text-color-dark);
             transition: all var(--transition-speed) ease;
+            overflow-x: hidden;
         }
 
         /* Background overlay with 20% opacity */
@@ -37,7 +40,7 @@
             background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0.2; /* 20% opacity */
-            z-index: -1; /* Make sure the overlay is behind the content */
+            z-index: -1;
         }
 
         /* Dark background overlay */
@@ -56,7 +59,7 @@
         header {
             background-color: #6c63ff;
             color: white;
-            padding: 10px 20px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -64,21 +67,33 @@
             top: 0;
             width: 100%;
             z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* Logo inside the header */
         header img {
             width: 200px;
             height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        header img:hover {
+            transform: scale(1.1);
         }
 
         /* Link styling for header title */
         header a {
             color: white;
             text-decoration: none;
-            font-size: 24px;
-            font-weight: bold;
-            margin-left: 10px;
+            font-size: 26px;
+            font-weight: 600;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        header a:hover {
+            color: #f1f1f1;
         }
 
         /* Dark Mode icon with animation */
@@ -101,23 +116,23 @@
         .image-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 images per row */
-            gap: 10px;
-            margin-top: 20px;
+            gap: 20px;
+            margin-top: 30px;
         }
 
         img {
             width: 100%;
             height: auto;
-            border: 2px solid #333333;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform var(--transition-speed), box-shadow var(--transition-speed);
         }
 
         img:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Milk splash effect */
@@ -180,6 +195,40 @@
             max-width: 90%;
             max-height: 90vh;
             height: auto;
+            border-radius: 10px;
+        }
+
+        /* Button styles */
+        button {
+            padding: 12px 30px;
+            background-color: var(--button-bg-dark);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 20px;
+        }
+
+        button:hover {
+            background-color: #555555;
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Show More Button */
+        #showMore {
+            display: none;
         }
     </style>
 </head>
@@ -250,25 +299,25 @@
                 const img = document.createElement("img");
                 img.src = imageUrl;
                 img.alt = "Waifu Image";
-                img.onclick = (event) => createMilkSplash(event, img.src);
+                img.onclick = (event) => {
+                    openPopup(img.src);
+                    createMilkSplash(event);
+                };
                 imageContainer.appendChild(img);
             });
         }
 
         // Create the milk splash effect
-        function createMilkSplash(event, imageSrc) {
-            const splash = document.createElement("div");
-            splash.classList.add("milk-splash");
+        function createMilkSplash(event) {
+            const splash = document.createElement('div');
+            splash.classList.add('milk-splash');
             splash.style.left = `${event.clientX}px`;
             splash.style.top = `${event.clientY}px`;
             document.body.appendChild(splash);
 
-            // Open popup with image
-            openPopup(imageSrc);
-
             setTimeout(() => {
                 splash.remove();
-            }, 1000); // Remove splash after animation
+            }, 1000);
         }
 
         // Toggle between dark and light mode
