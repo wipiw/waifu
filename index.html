@@ -72,13 +72,11 @@
 
         /* Logo inside the header */
         header img {
-    position: relative;
-    width: 180px;
-    height: auto;
-    left: 65px;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
 
         header img:hover {
             transform: scale(1.1);
@@ -88,7 +86,7 @@
         header a {
             color: white;
             text-decoration: none;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
             margin-left: 15px;
             transition: color 0.3s ease;
@@ -103,7 +101,7 @@
             background-color: transparent;
             border: none;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 28px;
             color: white;
             transition: color var(--transition-speed);
         }
@@ -248,9 +246,6 @@
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
 
-        <!-- Download All Button -->
-        <button id="downloadAll" style="display:none;">Download All Images</button>
-
         <!-- Show More Button -->
         <button id="showMore" style="display:none;">Show More</button>
     </div>
@@ -268,12 +263,9 @@
         const fetchButton = document.getElementById("fetchImage");
         const showMoreButton = document.getElementById("showMore");
         const imageContainer = document.getElementById("imageContainer");
-        const downloadAllButton = document.getElementById("downloadAll");
         const body = document.body;
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
-
-        let imageUrls = [];
 
         // Fetch images from the API
         function fetchImages() {
@@ -290,11 +282,9 @@
             .then(data => {
                 if (data.files) {
                     data.files.forEach(url => {
-                        imageUrls.push(url);
                         displayImage(url);
                     });
                     showMoreButton.style.display = "inline-block";
-                    downloadAllButton.style.display = "inline-block";
                 }
             })
             .catch(error => console.error("Error fetching images:", error));
@@ -322,18 +312,6 @@
         themeToggle.onclick = function () {
             body.classList.toggle("light-mode");
             themeToggle.textContent = body.classList.contains("light-mode") ? "🌙" : "☀️";
-        };
-
-        // Handle Download All Images
-        downloadAllButton.onclick = function () {
-            imageUrls.forEach(url => {
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = url.split("/").pop();
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            });
         };
 
         // Fetch 20 images initially
