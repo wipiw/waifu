@@ -4,193 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waifu Generator</title>
-
-    <!-- Favicon Link -->
-    <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg" sizes="100x100">
-
+    <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg">
     <style>
-        :root {
-            --bg-color-dark: #121212;
-            --text-color-dark: #ffffff;
-            --button-bg-dark: #333333;
-            --bg-color-light: #f4f4f9;
-            --text-color-light: #333333;
-            --button-bg-light: #6c63ff;
-        }
-
-        /* Set background image */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    color: var(--text-color-dark);
-    transition: all 0.3s ease;
-}
-
-/* Background overlay with 20% opacity */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
-    background-size: cover;
-    opacity: 0.2; /* 20% opacity */
-    z-index: -1; /* Make sure the overlay is behind the content */
-}
-
-
-        /* Logo in the top-left corner */
-        .logo {
-            width: 200px; /* Logo size */
-            height: auto;
-        }
-
-        header {
-            background-color: rgba(108, 99, 255, 0.8); /* Semi-transparent header for better visibility */
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            margin-top: 60px; /* Added space for the logo */
-        }
-
-        /* Center the logo and link */
-        header .logo-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        /* Link styling */
-        header a {
-            text-decoration: none;
-            color: inherit; /* Inherit color based on the theme */
-        }
-
-        .container {
-            text-align: center;
-            margin: 20px;
-        }
-
-        button {
-            background-color: var(--button-bg-dark);
-            color: var(--text-color-dark);
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #555555;
-        }
-
-        .toggle-theme {
-            position: absolute;
-            top: 32px;
-            right: 10px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            color: white;
-        }
-
-        /* Grid layout for images */
-        .image-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 images per row */
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        img {
-            width: 100%;
-            height: auto;
-            border: 2px solid #333333;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        footer {
-            background-color: #6c63ff;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        /* Light mode styles */
-        .light-mode {
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode button {
-            background-color: var(--button-bg-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode img {
-            border-color: #dddddd;
-        }
-
-        .light-mode .toggle-theme {
-            color: #333333;
-        }
-
-        .light-mode header a {
-            color: black; /* Black in light mode */
-        }
-
-        /* Dark mode styles */
-        .dark-mode header a {
-            color: white; /* White in dark mode */
-        }
-
-        /* Popup styles */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .popup img {
-            max-width: 90%;
-            max-height: 90vh;
-            height: auto;
-        }
+        /* Include the above CSS here */
     </style>
 </head>
 <body>
-    <!-- Logo in the top-left corner -->
-    <div class="logo-container">
-        <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Waifu Logo" class="logo">
-    </div>
-    
     <header>
-        <h1><a href="https://wipiw.github.io/waifu/">Waifu Pics</a></h1>
+        <!-- Logo in the header -->
+        <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Logo">
+        <a href="https://wipiw.github.io/waifu/">Waifu Pics</a>
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
     <div class="container">
         <!-- Get Images Button -->
-        <button id="fetchImage">Get 40 Waifu Images</button>
+        <button id="fetchImage">Get 20 Waifu Images</button>
         
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
@@ -205,7 +33,7 @@ body::before {
     </div>
     
     <footer>
-        <p>&copy; 2024 Waifu Pics Viewer</p>
+        <p>&copy; 2024 Waifu Generator</p>
     </footer>
 
     <script>
@@ -218,7 +46,7 @@ body::before {
 
         // Fetch images from the API
         function fetchImages() {
-            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {
+            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -230,7 +58,7 @@ body::before {
             .then(response => response.json())
             .then(data => {
                 if (data.files) {
-                    displayImages(data.files.slice(0, 40));  // Show only 40 images
+                    displayImages(data.files);
                     showMoreButton.style.display = "block";
                 } else {
                     alert("No images found.");
@@ -256,7 +84,6 @@ body::before {
         // Toggle between dark and light mode
         document.getElementById("toggleTheme").addEventListener("click", () => {
             body.classList.toggle("light-mode");
-            body.classList.toggle("dark-mode");
             const isLightMode = body.classList.contains("light-mode");
             document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
         });
