@@ -72,11 +72,13 @@
 
         /* Logo inside the header */
         header img {
-            width: 200px;
-            height: auto;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
+    position: relative;
+    width: 180px;
+    height: auto;
+    left: 65px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
 
         header img:hover {
             transform: scale(1.1);
@@ -86,7 +88,7 @@
         header a {
             color: white;
             text-decoration: none;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
             margin-left: 15px;
             transition: color 0.3s ease;
@@ -101,7 +103,7 @@
             background-color: transparent;
             border: none;
             cursor: pointer;
-            font-size: 28px;
+            font-size: 24px;
             color: white;
             transition: color var(--transition-speed);
         }
@@ -245,7 +247,10 @@
         
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
-        
+
+        <!-- Download All Button -->
+        <button id="downloadAll" style="display:none;">Download All Images</button>
+
         <!-- Show More Button -->
         <button id="showMore" style="display:none;">Show More</button>
     </div>
@@ -263,13 +268,16 @@
         const fetchButton = document.getElementById("fetchImage");
         const showMoreButton = document.getElementById("showMore");
         const imageContainer = document.getElementById("imageContainer");
+        const downloadAllButton = document.getElementById("downloadAll");
         const body = document.body;
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
 
+        let imageUrls = [];
+
         // Fetch images from the API
         function fetchImages() {
-            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  // "nsfw" instead of "nsf"
+            fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -281,73 +289,64 @@
             .then(response => response.json())
             .then(data => {
                 if (data.files) {
-                    displayImages(data.files);
-                    showMoreButton.style.display = "block";
-                } else {
-                    alert("No images found.");
+                    data.files.forEach(url => {
+                        imageUrls.push(url);
+                        displayImage(url);
+                    });
+                    showMoreButton.style.display = "inline-block";
+                    downloadAllButton.style.display = "inline-block";
                 }
             })
-            .catch(error => {
-                console.error("Error fetching Waifu images:", error);
-                alert("Failed to fetch images. Please try again later.");
-            });
+            .catch(error => console.error("Error fetching images:", error));
         }
 
-        // Display images on the page
-        function displayImages(images) {
-            images.forEach(imageUrl => {
-                const img = document.createElement("img");
-                img.src = imageUrl;
-                img.alt = "Waifu Image";
-                img.onclick = (event) => {
-                    openPopup(img.src);
-                    createMilkSplash(event);
-                };
-                imageContainer.appendChild(img);
-            });
+        // Display image in the grid
+        function displayImage(url) {
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = "Waifu Image";
+            img.onclick = function () {
+                popup.style.display = "flex";
+                popupImage.src = url;
+            };
+            imageContainer.appendChild(img);
         }
 
-        // Create the milk splash effect
-        function createMilkSplash(event) {
-            const splash = document.createElement('div');
-            splash.classList.add('milk-splash');
-            splash.style.left = `${event.clientX}px`;
-            splash.style.top = `${event.clientY}px`;
-            document.body.appendChild(splash);
-
-            setTimeout(() => {
-                splash.remove();
-            }, 1000);
-        }
-
-        // Toggle between dark and light mode
-        document.getElementById("toggleTheme").addEventListener("click", () => {
-            body.classList.toggle("light-mode");
-            const isLightMode = body.classList.contains("light-mode");
-            document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
-        });
-
-        // Show the popup
-        function openPopup(imageUrl) {
-            popup.style.display = "flex";
-            popupImage.src = imageUrl;
-        }
-
-        // Close the popup
-        popup.addEventListener("click", () => {
+        // Handle close of popup
+        popup.onclick = function () {
             popup.style.display = "none";
-        });
+        };
 
-        // Handle "Show More" button click
-        showMoreButton.addEventListener("click", () => {
-            fetchImages();
-        });
+        // Handle theme toggle
+        const themeToggle = document.getElementById("toggleTheme");
+        themeToggle.onclick = function () {
+            body.classList.toggle("light-mode");
+            themeToggle.textContent = body.classList.contains("light-mode") ? "🌙" : "☀️";
+        };
 
-        // Fetch initial images
-        fetchButton.addEventListener("click", () => {
-            imageContainer.innerHTML = ""; // Clear any previous images
+        // Handle Download All Images
+        downloadAllButton.onclick = function () {
+            imageUrls.forEach(url => {
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = url.split("/").pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        };
+
+        // Fetch 20 images initially
+        fetchButton.onclick = function () {
             fetchImages();
-        });
+            fetchButton.style.display = "none";
+        };
+
+        // Show more images on click
+        showMoreButton.onclick = function () {
+            fetchImages();
+            showMoreButton.style.display = "none";
+        };
     </script>
 </body>
 </html>
