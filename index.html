@@ -19,22 +19,33 @@
         }
 
         /* Set background image */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
-            background-size: cover; /* Ensures background image covers the entire page */
-            color: var(--text-color-dark);
-            transition: all 0.3s ease;
-        }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    color: var(--text-color-dark);
+    transition: all 0.3s ease;
+}
 
-        /* Logo in top-left corner */
+/* Background overlay with 20% opacity */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.2; /* 20% opacity */
+    z-index: -1; /* Make sure the overlay is behind the content */
+}
+
+
+        /* Logo in the top-left corner */
         .logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 50px;  /* Adjust the size as needed */
+            width: 200px; /* Logo size */
             height: auto;
         }
 
@@ -45,6 +56,13 @@
             text-align: center;
             position: relative;
             margin-top: 60px; /* Added space for the logo */
+        }
+
+        /* Center the logo and link */
+        header .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
 
         /* Link styling */
@@ -75,7 +93,7 @@
 
         .toggle-theme {
             position: absolute;
-            top: 10px;
+            top: 32px;
             right: 10px;
             background-color: transparent;
             border: none;
@@ -162,7 +180,9 @@
 </head>
 <body>
     <!-- Logo in the top-left corner -->
-    <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Waifu Logo" class="logo">
+    <div class="logo-container">
+        <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Waifu Logo" class="logo">
+    </div>
     
     <header>
         <h1><a href="https://wipiw.github.io/waifu/">Waifu Pics</a></h1>
