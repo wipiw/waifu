@@ -7,50 +7,14 @@
     <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color-dark: #121212;
-            --text-color-dark: #ffffff;
-            --button-bg-dark: #333333;
-            --bg-color-light: #f4f4f9;
-            --text-color-light: #333333;
-            --button-bg-light: #6c63ff;
-            --milk-color: rgba(255, 255, 255, 0.5); /* White milk effect color */
-            --transition-speed: 0.3s;
-            --font-family: 'Poppins', sans-serif;
-        }
-
         body {
-            font-family: var(--font-family);
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             position: relative;
-            color: var(--text-color-dark);
-            transition: all var(--transition-speed) ease;
+            color: white;
+            background-color: #121212;
             overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://github.com/wipiw/waifu/raw/main/background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            opacity: 0.2;
-            z-index: -1;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: -1;
         }
 
         header {
@@ -71,33 +35,6 @@
             width: 200px;
             height: auto;
             border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        header img:hover {
-            transform: scale(1.1);
-        }
-
-        header a {
-            color: white;
-            text-decoration: none;
-            font-size: 26px;
-            font-weight: 600;
-            margin-left: 15px;
-            transition: color 0.3s ease;
-        }
-
-        header a:hover {
-            color: #f1f1f1;
-        }
-
-        .toggle-theme {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 28px;
-            color: white;
-            transition: color var(--transition-speed);
         }
 
         .container {
@@ -117,54 +54,28 @@
             height: auto;
             border-radius: 15px;
             cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
         }
 
-        img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        button {
+            padding: 12px 30px;
+            background-color: #333333;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 20px;
         }
 
-        .milk-splash {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background-color: var(--milk-color);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: splashAnimation 1s ease-out forwards;
-            transform: translate(-50%, -50%);
-        }
-
-        @keyframes splashAnimation {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .light-mode {
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode button {
-            background-color: var(--button-bg-light);
-            color: var(--text-color-light);
-        }
-
-        .light-mode img {
-            border-color: #dddddd;
-        }
-
-        .light-mode .toggle-theme {
-            color: #333333;
+        footer {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
         }
 
         .popup {
@@ -186,49 +97,17 @@
             height: auto;
             border-radius: 10px;
         }
-
-        button {
-            padding: 12px 30px;
-            background-color: var(--button-bg-dark);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            margin: 20px;
-        }
-
-        button:hover {
-            background-color: #555555;
-            transform: scale(1.05);
-        }
-
-        footer {
-            background-color: #6c63ff;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        #showMore {
-            display: none;
-        }
     </style>
 </head>
 <body>
     <header>
         <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Logo">
         <a href="https://wipiw.github.io/waifu/">Waifu Pics</a>
-        <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
+
     <div class="container">
         <button id="fetchImage">Get 40 Waifu Images</button>
         <div id="imageContainer" class="image-container"></div>
-        <button id="showMore" style="display:none;">Show More</button>
     </div>
 
     <div id="popup" class="popup">
@@ -239,107 +118,63 @@
         <p>&copy; 2024 Waifu Generator</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const fetchButton = document.getElementById("fetchImage");
-        const showMoreButton = document.getElementById("showMore");
         const imageContainer = document.getElementById("imageContainer");
-        const body = document.body;
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
 
-        // Fetch images from Waifu.im API
-        function fetchImages() {
-            const apiUrl = 'https://waifu.it/api/';
-            const params = {
-                included_tags: ['raiden-shogun', 'maid'],  // Example tags to filter images
-                height: '>=2000'  // Example height filter
-            };
+        const token = "NzI1MjQ3MTc1ODg1NDU1NDEw.MTczMTQ2MDA1Mw--.59550cfaaa5";  // Your actual token
+        const url = "https://waifu.it/api/v4/images";  // Endpoint to fetch images
 
-            const queryParams = new URLSearchParams();
-
-            for (const key in params) {
-                if (Array.isArray(params[key])) {
-                    params[key].forEach(value => {
-                        queryParams.append(key, value);
-                    });
-                } else {
-                    queryParams.set(key, params[key]);
-                }
-            }
-
-            const requestUrl = `${apiUrl}?${queryParams.toString()}`;
-
-            fetch(requestUrl)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Request failed with status code: ' + response.status);
+        // Fetch images from Waifu.it API
+        const fetchImages = async () => {
+            try {
+                const response = await axios.get(url, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,  // Using the Bearer token
                     }
-                })
-                .then(data => {
-                    if (data?.images?.length) {
-                        displayImages(data.images);
-                        showMoreButton.style.display = "block";
-                    } else {
-                        alert("No images found.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching Waifu images:", error);
-                    alert("Failed to fetch images. Please try again later.");
                 });
-        }
+
+                const images = response.data.images;  // Assuming the images are in the 'images' array
+                if (images) {
+                    displayImages(images);
+                } else {
+                    alert("No images found.");
+                }
+            } catch (err) {
+                console.error("Error fetching data:", err.message);
+                alert("Failed to fetch images. Please try again later.");
+            }
+        };
 
         // Display images on the page
-        function displayImages(images) {
+        const displayImages = (images) => {
             images.forEach(image => {
                 const img = document.createElement("img");
-                img.src = image.url;  // The URL of the image from the API response
+                img.src = image.url;  // Assuming image URLs are inside 'url' property
                 img.alt = "Waifu Image";
-                img.onclick = (event) => {
-                    openPopup(img.src);
-                    createMilkSplash(event);
-                };
+                img.onclick = () => openPopup(image.url);
                 imageContainer.appendChild(img);
             });
-        }
+        };
 
-        // Open image in popup
-        function openPopup(imgSrc) {
-            popupImage.src = imgSrc;
+        // Show the large image in a popup
+        const openPopup = (imageUrl) => {
             popup.style.display = "flex";
-        }
+            popupImage.src = imageUrl;
+        };
 
-        // Close popup when clicked outside
+        // Close the popup when clicked
         popup.addEventListener("click", () => {
             popup.style.display = "none";
         });
 
-        // Milk splash effect
-        function createMilkSplash(event) {
-            const milkSplash = document.createElement("div");
-            milkSplash.classList.add("milk-splash");
-            document.body.appendChild(milkSplash);
-            milkSplash.style.left = `${event.clientX}px`;
-            milkSplash.style.top = `${event.clientY}px`;
-        }
-
-        // Toggle dark and light modes
-        const toggleThemeButton = document.getElementById("toggleTheme");
-        toggleThemeButton.addEventListener("click", () => {
-            body.classList.toggle("light-mode");
-            toggleThemeButton.textContent = body.classList.contains("light-mode") ? "🌙" : "☀️";
-        });
-
-        // Fetch images when the button is clicked
+        // Fetch images when the "Get 40 Waifu Images" button is clicked
         fetchButton.addEventListener("click", () => {
-            fetchImages();  // Fetch images from API
-        });
-
-        // Show more images when the button is clicked
-        showMoreButton.addEventListener("click", () => {
-            fetchImages();  // Fetch more images on button click
+            imageContainer.innerHTML = "";  // Clear previous images
+            fetchImages();
         });
     </script>
 </body>
