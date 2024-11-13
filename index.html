@@ -72,7 +72,7 @@
 
         /* Logo inside the header */
         header img {
-            width: 200px;
+            width: 180px;
             height: auto;
             border-radius: 10px;
             transition: transform 0.3s ease;
@@ -86,7 +86,7 @@
         header a {
             color: white;
             text-decoration: none;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
             margin-left: 15px;
             transition: color 0.3s ease;
@@ -101,7 +101,7 @@
             background-color: transparent;
             border: none;
             cursor: pointer;
-            font-size: 28px;
+            font-size: 24px;
             color: white;
             transition: color var(--transition-speed);
         }
@@ -241,7 +241,7 @@
     </header>
     <div class="container">
         <!-- Get Images Button -->
-        <button id="fetchImage">Get 20 Waifu Images</button>
+        <button id="fetchImage">Get 40 Waifu Images</button>
         
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
@@ -267,6 +267,8 @@
         const popup = document.getElementById("popup");
         const popupImage = document.getElementById("popupImage");
 
+        let imageCount = 0;
+
         // Fetch images from the API
         function fetchImages() {
             fetch(`https://api.waifu.pics/many/nsfw/waifu`, {  
@@ -284,13 +286,16 @@
                     data.files.forEach(url => {
                         displayImage(url);
                     });
-                    showMoreButton.style.display = "inline-block";
+                    imageCount += data.files.length;
+                    if (imageCount < 100) {
+                        showMoreButton.style.display = 'inline-block';
+                    }
                 }
             })
-            .catch(error => console.error("Error fetching images:", error));
+            .catch(error => console.error('Error fetching images:', error));
         }
 
-        // Display image in the grid
+        // Display images on the page
         function displayImage(url) {
             const img = document.createElement("img");
             img.src = url;
@@ -302,7 +307,7 @@
             imageContainer.appendChild(img);
         }
 
-        // Handle close of popup
+        // Close the popup when clicked
         popup.onclick = function () {
             popup.style.display = "none";
         };
@@ -314,16 +319,15 @@
             themeToggle.textContent = body.classList.contains("light-mode") ? "🌙" : "☀️";
         };
 
-        // Fetch 20 images initially
+        // Fetch 40 images when the button is clicked
         fetchButton.onclick = function () {
             fetchImages();
             fetchButton.style.display = "none";
         };
 
-        // Show more images on click
+        // Show more images on click (load 40 images more)
         showMoreButton.onclick = function () {
             fetchImages();
-            showMoreButton.style.display = "none";
         };
     </script>
 </body>
