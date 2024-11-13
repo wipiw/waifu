@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waifu Pics</title>
+    <title>Waifu Generator</title>
 
     <!-- Favicon Link -->
     <link rel="icon" href="https://github.com/wipiw/waifu/raw/main/ico.jpg" type="image/jpeg" sizes="100x100">
@@ -27,12 +27,28 @@
             transition: all 0.3s ease;
         }
 
+        /* Logo in top-left corner */
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;  /* Adjust the size as needed */
+            height: auto;
+        }
+
         header {
             background-color: #6c63ff;
             color: white;
             padding: 20px;
             text-align: center;
             position: relative;
+            margin-top: 60px; /* Added space for the logo */
+        }
+
+        /* Link styling */
+        header a {
+            text-decoration: none;
+            color: inherit; /* Inherit color based on the theme */
         }
 
         .container {
@@ -112,6 +128,15 @@
             color: #333333;
         }
 
+        .light-mode header a {
+            color: black; /* Black in light mode */
+        }
+
+        /* Dark mode styles */
+        .dark-mode header a {
+            color: white; /* White in dark mode */
+        }
+
         /* Popup styles */
         .popup {
             display: none;
@@ -134,8 +159,11 @@
     </style>
 </head>
 <body>
+    <!-- Logo in the top-left corner -->
+    <img src="https://github.com/wipiw/waifu/raw/main/logo.png" alt="Waifu Logo" class="logo">
+    
     <header>
-        <h1>Waifu Pics Viewer</h1>
+        <h1><a href="https://wipiw.github.io/waifu/">Waifu Pics</a></h1>
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
     <div class="container">
@@ -206,6 +234,7 @@
         // Toggle between dark and light mode
         document.getElementById("toggleTheme").addEventListener("click", () => {
             body.classList.toggle("light-mode");
+            body.classList.toggle("dark-mode");
             const isLightMode = body.classList.contains("light-mode");
             document.getElementById("toggleTheme").textContent = isLightMode ? "🌙" : "☀️";
         });
