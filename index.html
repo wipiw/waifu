@@ -63,6 +63,17 @@
             color: white;
         }
 
+        /* Logo styles */
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px; /* Adjust size as needed */
+            height: auto;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
         /* Grid layout for images */
         .image-container {
             display: grid;
@@ -154,19 +165,34 @@
         #nextButton {
             right: 20px;
         }
+
+        /* Ensure the "Show More" button is always below the images */
+        #showMore {
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
+    <!-- Logo linking to the main website -->
+    <a href="https://wipiw.github.io/waifu/" target="_blank">
+        <img src="logo.png" alt="Main Website" class="logo">
+    </a>
+
     <header>
         <h1>Waifu Pics Viewer</h1>
         <button class="toggle-theme" id="toggleTheme">☀️</button>
     </header>
     <div class="container">
-        <!-- Show More Button -->
-        <button id="showMore">Show More</button>
-        
         <!-- Container to display images -->
         <div id="imageContainer" class="image-container"></div>
+        
+        <!-- Show More Button -->
+        <button id="showMore">Show More</button>
     </div>
     
     <!-- Popup for showing large image -->
