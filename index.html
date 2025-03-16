@@ -191,6 +191,7 @@
 
         let currentImageIndex = 0;
         let images = [];
+        let displayedImages = new Set(); // Track displayed images to avoid duplicates
 
         // Fetch images from the API
         function fetchImages() {
@@ -206,8 +207,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.files) {
-                    images = images.concat(data.files); // Append new images
-                    displayImages(data.files);
+                    const newImages = data.files.filter(url => !displayedImages.has(url)); // Filter out duplicates
+                    if (newImages.length > 0) {
+                        images = images.concat(newImages); // Append new unique images
+                        displayImages(newImages);
+                        newImages.forEach(url => displayedImages.add(url)); // Add new images to the displayed set
+                    } else {
+                        alert("No new images found. Try again later.");
+                    }
                 } else {
                     alert("No images found.");
                 }
